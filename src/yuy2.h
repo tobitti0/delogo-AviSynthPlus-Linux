@@ -1,7 +1,7 @@
 //
 //	Copylight (C) 2003 MakKi
 //
-//	Avisynth‚ªGPL‚È‚Ì‚ÅA‚±‚Ìƒ\ƒtƒg‚àGPL‚É‚µ‚Ü‚·B
+//	AvisynthãŒGPLãªã®ã§ã€ã“ã®ã‚½ãƒ•ãƒˆã‚‚GPLã«ã—ã¾ã™ã€‚
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #ifndef ___YUY2_H
 #define ___YUY2_H
 
-#include "../logo.h"
+#include "logo.h"
 #include "delogo.h"
 
 /// COLOR = YUY2
@@ -51,7 +51,7 @@ struct YUY2 {
 
 		LOGO_PIXEL *p  = new LOGO_PIXEL[lgh.w/2 * lgh.h];
 		if(p==NULL){
-			throw "Failed in memory allocation. - ƒƒ‚ƒŠŠm•Û‚É¸”s‚µ‚Ü‚µ‚½";
+			throw "Failed in memory allocation. - ãƒ¡ãƒ¢ãƒªç¢ºä¿ã«å¤±æ•—ã—ã¾ã—ãŸ";
 		}
 		LOGO_PIXEL *dst = p;
 
@@ -92,13 +92,13 @@ PVideoFrame __stdcall deLOGO<Erase,YUY2>::GetFrame(int n,IScriptEnvironment *env
 {
 	PVideoFrame frame(child->GetFrame(n,env));
 
-	// ƒtƒF[ƒh‚É‚æ‚é•s“§–¾“xŒvZ
+	// ãƒ•ã‚§ãƒ¼ãƒ‰ã«ã‚ˆã‚‹ä¸é€æ˜åº¦è¨ˆç®—
 	int fade = CalcFade(n);
 	if(fade==0) return frame;
 
 	env->MakeWritable(&frame);
 
-	int logo_w = min(lgh.w,frame->GetRowSize()-lgh.x);	// lgh.w,lgh.x‚Í•K‚¸‹ô”
+	int logo_w = min(lgh.w,frame->GetRowSize()-lgh.x);	// lgh.w,lgh.xã¯å¿…ãšå¶æ•°
 	int logo_h = min(lgh.h,frame->GetHeight()-lgh.y);
 
 	int dst_x = lgh.x;
@@ -115,7 +115,7 @@ PVideoFrame __stdcall deLOGO<Erase,YUY2>::GetFrame(int n,IScriptEnvironment *env
 		logo_h -= logo_y;
 		dst_y = 0;
 	}
-	if(logo_w<=0 || logo_h<=0) return frame;	// ‰æ–ÊŠO
+	if(logo_w<=0 || logo_h<=0) return frame;	// ç”»é¢å¤–
 
 	const int logo_pitch = lgh.w /2;
 	const int logo_pitch_r = logo_pitch - logo_w /2;
@@ -176,7 +176,7 @@ PVideoFrame __stdcall deLOGO<Add,YUY2>::GetFrame(int n,IScriptEnvironment *env)
 
 	env->MakeWritable(&frame);
 
-	int logo_w = min(lgh.w,frame->GetRowSize()-lgh.x);	// lgh.w,lgh.x‚Í•K‚¸‹ô”
+	int logo_w = min(lgh.w,frame->GetRowSize()-lgh.x);	// lgh.w,lgh.xã¯å¿…ãšå¶æ•°
 	int logo_h = min(lgh.h,frame->GetHeight()-lgh.y);
 
 	int dst_x = lgh.x;
@@ -193,7 +193,7 @@ PVideoFrame __stdcall deLOGO<Add,YUY2>::GetFrame(int n,IScriptEnvironment *env)
 		logo_h -= logo_y;
 		dst_y = 0;
 	}
-	if(logo_w<=0 || logo_h<=0) return frame;	// ‰æ–ÊŠO
+	if(logo_w<=0 || logo_h<=0) return frame;	// ç”»é¢å¤–
 
 	const int logo_pitch = lgh.w /2;
 	const int logo_pitch_r = logo_pitch - logo_w /2;

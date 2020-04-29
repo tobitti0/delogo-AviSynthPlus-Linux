@@ -1,7 +1,7 @@
 //
 //	Copylight (C) 2003 MakKi
 //
-//	Avisynth��GPL�Ȃ̂ŁA���̃\�t�g��GPL�ɂ��܂��B
+//	AvisynthがGPLなので、このソフトもGPLにします。
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,17 +20,16 @@
 //
 //
 
-#include <windows.h>
 #include <math.h>
-#include "avisynth.h"
-#include "../logo.h"
+#include <avisynth.h>
+#include "logo.h"
 #include "delogo.h"
 #include "yuy2.h"
 #include "yv12.h"
 
 
 /*****************************************************************************/
-/** �t�B���^�쐬
+/** フィルタ作成
  */
 template <class TYPE>
 class deLOGO_Create {
@@ -75,10 +74,10 @@ public:
 			}
 		}
 		else{
-			env->ThrowError("%s : Supprot only YUY2 or YV12. - YUY2,YV12��p",Name());
+			env->ThrowError("%s : Supprot only YUY2 or YV12. - YUY2,YV12専用",Name());
 		}
 
-		return NULL;
+		//return NULL;
 	}
 
 	static const char *Name(void){ return TYPE::Name(); };
@@ -88,7 +87,7 @@ public:
 };
 
 /*****************************************************************************/
-/** �G�N�X�|�[�g�֐�
+/** エクスポート関数
  */
 const AVS_Linkage *AVS_linkage = NULL; 
  

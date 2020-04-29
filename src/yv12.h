@@ -1,7 +1,7 @@
 //
 //	Copylight (C) 2003 MakKi
 //
-//	Avisynth‚ªGPL‚È‚Ì‚ÅA‚±‚Ìƒ\ƒtƒg‚àGPL‚É‚µ‚Ü‚·B
+//	AvisynthãŒGPLãªã®ã§ã€ã“ã®ã‚½ãƒ•ãƒˆã‚‚GPLã«ã—ã¾ã™ã€‚
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,14 +22,14 @@
 #ifndef ___YV12_H
 #define ___YV12_H
 
-#include "../logo.h"
+#include "logo.h"
 #include "delogo.h"
 
 /*****************************************************************************/
 /** COLOR = YV12
  *
- * struct YV12p : ƒvƒƒOƒŒYV12
- * struct YV12i : ƒCƒ“ƒ^ƒŒYV12
+ * struct YV12p : ãƒ—ãƒ­ã‚°ãƒ¬YV12
+ * struct YV12i : ã‚¤ãƒ³ã‚¿ãƒ¬YV12
  */
 template <bool interlaced>
 struct YV12 {
@@ -61,7 +61,7 @@ struct YV12 {
 
 		LOGO_PIXEL *p = new LOGO_PIXEL[lgh.w * lgh.h * 3 / 2];
 		if(p==NULL){
-			throw "Failed in memory allocation. - ƒƒ‚ƒŠŠm•Û‚É¸”s‚µ‚Ü‚µ‚½";
+			throw "Failed in memory allocation. - ãƒ¡ãƒ¢ãƒªç¢ºä¿ã«å¤±æ•—ã—ã¾ã—ãŸ";
 		}
 		LOGO_PIXEL *dst = p;
 
@@ -140,21 +140,25 @@ namespace YV12_internal {
 };
 
 /*===========================================================================*/
+template <>
 inline void YV12p::ConvertU(LOGO_PIXEL *dst,::LOGO_PIXEL *src,const ::LOGO_HEADER &lgh,bool oddx,bool oddy,bool oddw,bool oddh)
 {
 	using namespace YV12_internal;
 	ConvertUVp<ChromaU>::Convert(dst,src,lgh,oddx,oddy,oddw,oddh);
 }
+template <>
 inline void YV12p::ConvertV(LOGO_PIXEL *dst,::LOGO_PIXEL *src,const ::LOGO_HEADER &lgh,bool oddx,bool oddy,bool oddw,bool oddh)
 {
 	using namespace YV12_internal;
 	ConvertUVp<ChromaV>::Convert(dst,src,lgh,oddx,oddy,oddw,oddh);
 }
+template <>
 inline void YV12i::ConvertU(LOGO_PIXEL *dst,::LOGO_PIXEL *src,const ::LOGO_HEADER &lgh,bool oddx,bool oddy,bool oddw,bool oddh)
 {
 	using namespace YV12_internal;
 	ConvertUVi<ChromaU>::Convert(dst,src,lgh,oddx,oddy,oddw,oddh);
 }
+template <>
 inline void YV12i::ConvertV(LOGO_PIXEL *dst,::LOGO_PIXEL *src,const ::LOGO_HEADER &lgh,bool oddx,bool oddy,bool oddw,bool oddh)
 {
 	using namespace YV12_internal;
@@ -162,14 +166,14 @@ inline void YV12i::ConvertV(LOGO_PIXEL *dst,::LOGO_PIXEL *src,const ::LOGO_HEADE
 }
 
 /*===========================================================================*/
-/** ƒvƒƒOƒŒYV12—p
+/** ãƒ—ãƒ­ã‚°ãƒ¬YV12ç”¨
  */
 template<class Chroma>
 inline void YV12_internal::ConvertUVp<Chroma>::Convert(YV12p::LOGO_PIXEL *dst,::LOGO_PIXEL *src,const ::LOGO_HEADER &lgh,bool oddx,bool oddy,bool oddw,bool oddh)
 {
 	const int srcw = lgh.w - (oddx?1:0) - (oddw?1:0);
 	const int srch = lgh.h - (oddy?1:0) - (oddh?1:0);
-	const int srcw_r = (srcw - (oddx?1:0) - (oddw?1:0))/2 + (oddw?1:0);	// oddw=t‚Ì‚ÍˆêŒÂ‘½‚­
+	const int srcw_r = (srcw - (oddx?1:0) - (oddw?1:0))/2 + (oddw?1:0);	// oddw=tã®æ™‚ã¯ä¸€å€‹å¤šã
 	const int srch_r = (srch - (oddy?1:0) - (oddh?1:0))/2;
 	::LOGO_PIXEL *s1 = src;
 
@@ -185,7 +189,7 @@ inline void YV12_internal::ConvertUVp<Chroma>::Convert(YV12p::LOGO_PIXEL *dst,::
 			++dst;
 			s1 += 2;
 		}
-		if(oddw){	// ‘½‚­‚µ‚Ä‚é•ª‚ğŒ¸
+		if(oddw){	// å¤šãã—ã¦ã‚‹åˆ†ã‚’æ¸›
 			--s1;
 		}
 	}
@@ -231,8 +235,8 @@ inline void YV12_internal::ConvertUVp<Chroma>::Convert(YV12p::LOGO_PIXEL *dst,::
 }
 
 /*---------------------------------------------------------------------------*/
-/** ƒCƒ“ƒ^ƒŒYV12—p
- * ƒCƒ“ƒ^ƒŒYV12•âŠ®
+/** ã‚¤ãƒ³ã‚¿ãƒ¬YV12ç”¨
+ * ã‚¤ãƒ³ã‚¿ãƒ¬YV12è£œå®Œ
  *  h=4n+0,4n+1 -> UpperLine:LowerLine = 3:1
  *  h=4n+2,4n+3 -> UpperLine:LowerLine = 1:3
  */
@@ -249,7 +253,7 @@ inline void YV12_internal::ConvertUVi<Chroma>::Convert(YV12i::LOGO_PIXEL *dst,::
 
 	::LOGO_PIXEL *s1, *s2;
 
-	// ã’iˆ—
+	// ä¸Šæ®µå‡¦ç†
 	if(top>=2){
 		::LOGO_PIXEL *s;
 		if(top==3){	// y = 4n+3
@@ -306,7 +310,7 @@ inline void YV12_internal::ConvertUVi<Chroma>::Convert(YV12i::LOGO_PIXEL *dst,::
 		}
 	}
 
-	// ’†’iˆ—
+	// ä¸­æ®µå‡¦ç†
 	s2 = s1 + srcw *2;
 	for(int i=srch_r;i;--i){
 		int j;
@@ -349,7 +353,7 @@ inline void YV12_internal::ConvertUVi<Chroma>::Convert(YV12i::LOGO_PIXEL *dst,::
 		s2 = s1 + srcw *2;
 	}
 
-	// ‰º’iˆ—
+	// ä¸‹æ®µå‡¦ç†
 	if(btm==3){
 		int j;
 		if(oddx){
@@ -404,7 +408,7 @@ PVideoFrame __stdcall deLOGO<Erase,YV12p>::GetFrame(int n,IScriptEnvironment *en
 
 	env->MakeWritable(&frame);
 
-	// ƒƒS‚Ìxywh, frame‚Ìwh‚Í‘S•”‹ô”
+	// ãƒ­ã‚´ã®xywh, frameã®whã¯å…¨éƒ¨å¶æ•°
 	int logo_w = min(lgh.w, frame->GetRowSize()-lgh.x);
 	int logo_h = min(lgh.h, frame->GetHeight()-lgh.y);
 	int dst_x = lgh.x;
@@ -421,7 +425,7 @@ PVideoFrame __stdcall deLOGO<Erase,YV12p>::GetFrame(int n,IScriptEnvironment *en
 		logo_h -= logo_y;
 		dst_y = 0;
 	}
-	if(logo_w<=0 || logo_h<=0) return frame;	// ‰æ–ÊŠO
+	if(logo_w<=0 || logo_h<=0) return frame;	// ç”»é¢å¤–
 
 	//Y
 	int dst_pitch = frame->GetPitch(PLANAR_Y);
@@ -499,7 +503,7 @@ PVideoFrame __stdcall deLOGO<Add,YV12p>::GetFrame(int n,IScriptEnvironment *env)
 
 	env->MakeWritable(&frame);
 
-	// ƒƒS‚Ìxywh, frame‚Ìwh‚Í‘S•”‹ô”
+	// ãƒ­ã‚´ã®xywh, frameã®whã¯å…¨éƒ¨å¶æ•°
 	int logo_w = min(lgh.w, frame->GetRowSize()-lgh.x);
 	int logo_h = min(lgh.h, frame->GetHeight()-lgh.y);
 	int dst_x = lgh.x;
@@ -516,7 +520,7 @@ PVideoFrame __stdcall deLOGO<Add,YV12p>::GetFrame(int n,IScriptEnvironment *env)
 		logo_h -= logo_y;
 		dst_y = 0;
 	}
-	if(logo_w<=0 || logo_h<=0) return frame;	// ‰æ–ÊŠO
+	if(logo_w<=0 || logo_h<=0) return frame;	// ç”»é¢å¤–
 
 	//Y
 	int dst_pitch = frame->GetPitch(PLANAR_Y);
@@ -591,7 +595,7 @@ PVideoFrame __stdcall deLOGO<Erase,YV12i>::GetFrame(int n,IScriptEnvironment *en
 
 	env->MakeWritable(&frame);
 
-	// ƒƒS‚Ìxywh, frame‚Ìwh‚Í‘S•”‹ô”
+	// ãƒ­ã‚´ã®xywh, frameã®whã¯å…¨éƒ¨å¶æ•°
 	int logo_w = min(lgh.w, frame->GetRowSize()-lgh.x);
 	int logo_h = min(lgh.h, frame->GetHeight()-lgh.y);
 	int dst_x = lgh.x;
@@ -608,7 +612,7 @@ PVideoFrame __stdcall deLOGO<Erase,YV12i>::GetFrame(int n,IScriptEnvironment *en
 		logo_h -= logo_y;
 		dst_y = 0;
 	}
-	if(logo_w<=0 || logo_h<=0) return frame;	// ‰æ–ÊŠO
+	if(logo_w<=0 || logo_h<=0) return frame;	// ç”»é¢å¤–
 
 	//Y
 	int dst_pitch = frame->GetPitch(PLANAR_Y);
@@ -686,7 +690,7 @@ PVideoFrame __stdcall deLOGO<Add,YV12i>::GetFrame(int n,IScriptEnvironment *env)
 
 	env->MakeWritable(&frame);
 
-	// ƒƒS‚Ìxywh, frame‚Ìwh‚Í‘S•”‹ô”
+	// ãƒ­ã‚´ã®xywh, frameã®whã¯å…¨éƒ¨å¶æ•°
 	int logo_w = min(lgh.w, frame->GetRowSize()-lgh.x);
 	int logo_h = min(lgh.h, frame->GetHeight()-lgh.y);
 	int dst_x = lgh.x;
@@ -703,7 +707,7 @@ PVideoFrame __stdcall deLOGO<Add,YV12i>::GetFrame(int n,IScriptEnvironment *env)
 		logo_h -= logo_y;
 		dst_y = 0;
 	}
-	if(logo_w<=0 || logo_h<=0) return frame;	// ‰æ–ÊŠO
+	if(logo_w<=0 || logo_h<=0) return frame;	// ç”»é¢å¤–
 
 	//Y
 	int dst_pitch = frame->GetPitch(PLANAR_Y);
