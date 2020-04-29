@@ -1,7 +1,7 @@
 //
 //	Copylight (C) 2003 MakKi
 //
-//	Avisynth‚ªGPL‚È‚Ì‚ÅA‚±‚Ìƒ\ƒtƒg‚àGPL‚É‚µ‚Ü‚·B
+//	AvisynthãŒGPLãªã®ã§ã€ã“ã®ã‚½ãƒ•ãƒˆã‚‚GPLã«ã—ã¾ã™ã€‚
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,19 +20,36 @@
 //
 //
 /** @file
- *	@brief Šî’êƒNƒ‰ƒX
+ *	@brief åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 #ifndef ___DELOGO_H
 #define ___DELOGO_H
 
-#include <windows.h>
+#define min( a, b ) ((a) < (b) ? (a) : (b))
+#define max( a, b ) ((a) > (b) ? (a) : (b))
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+unsigned long GetFileSize(const char *fileName) {
+	int fd = open(fileName, O_RDONLY);
+	struct stat statBuf;
+	fstat(fd, &statBuf);
+	close(fd);
+	return (unsigned long) statBuf.st_size;
+}
+
 #include <math.h>
 #include "avisynth.h"
-#include "../logo.h"
+#include "logo.h"
 
 enum {
-	LOGO_FADE_MAX = 256,	/// ƒtƒF[ƒh‚Ì•s“§–¾“xÅ‘å’l
-	LOGO_DEFAULT_DEPTH = 128,	/// •s“§–¾“xi[“xj‰Šú’l
+	LOGO_FADE_MAX = 256,	/// ãƒ•ã‚§ãƒ¼ãƒ‰æ™‚ã®ä¸é€æ˜åº¦æœ€å¤§å€¤
+	LOGO_DEFAULT_DEPTH = 128,	/// ä¸é€æ˜åº¦ï¼ˆæ·±åº¦ï¼‰åˆæœŸå€¤
 };
 
 /*---------------------------------------------------------------------------*/
@@ -50,12 +67,12 @@ struct Add {
 
 //@}
 /*****************************************************************************/
-/** Šî’êƒNƒ‰ƒX
+/** åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 template <class TYPE,class COLOR>
 class deLOGO : public GenericVideoFilter {
 protected:
-	/// ”z—ñƒ|ƒCƒ“ƒ^ŠÇ——pauto_ptr
+	/// é…åˆ—ãƒã‚¤ãƒ³ã‚¿ç®¡ç†ç”¨auto_ptr
 	template<class T>
 	class aptr{
 		T *ptr;
@@ -91,18 +108,18 @@ public:
 
 		try{
 			aptr<::LOGO_PIXEL> srcdata;
-			// “Ç‚İ‚İ
+			// èª­ã¿è¾¼ã¿
 			srcdata = ReadLogoData(logofile,logoname);
-			// ˆÊ’uA[“x’²ß
+			// ä½ç½®ã€æ·±åº¦èª¿ç¯€
 			if(pos_x!=0 || pos_y!=0 || depth!=LOGO_DEFAULT_DEPTH){
 				AdjustLogo(srcdata.ref(),pos_x,pos_y,depth);
 			}
-			// F’²ß
+			// è‰²èª¿ç¯€
 			if(y || u || v){
 				ColorTuning(srcdata.ref(),y,u,v);
 			}
 
-			// COLOR::Convert‚ÍƒƒSƒf[ƒ^‚ğnew[]‚µ‚Ä•Ô‚·
+			// COLOR::Convertã¯ãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿ã‚’new[]ã—ã¦è¿”ã™
 			logodata = COLOR::Convert(srcdata.get(),lgh);
 		}
 		catch(const char *err){
@@ -114,83 +131,100 @@ public:
 	PVideoFrame __stdcall GetFrame(int n,IScriptEnvironment *env);
 
 protected:
-	/// ƒƒSƒf[ƒ^ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	/// ãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	::LOGO_PIXEL *ReadLogoData(const char *logofile,const char *logoname)
 	{
-		class FILE_HANDLE{
-			HANDLE h;
-		public:
-			FILE_HANDLE(void):h(INVALID_HANDLE_VALUE){}
-			FILE_HANDLE(HANDLE _h):h(_h){}
-			~FILE_HANDLE(){
-				CloseHandle(h);
-			}
-			operator HANDLE(void){ return h; }
-			operator bool(void){ return h!=INVALID_HANDLE_VALUE; }
-			bool operator==(HANDLE hh){ return h==hh; }
-			bool operator!=(HANDLE hh){ return h!=hh; }
-		};
+		//class FILE_HANDLE{
+		//	FILE *h;
+		//public:
+		//	FILE_HANDLE(void*):h(INVALID_HANDLE_VALUE){}
+		//	FILE_HANDLE(FILE* _h):h(_h){}
+		//	~FILE_HANDLE(){
+		//		fclose(h);
+		//	}
+		//	operator FILE*(void*){ return h; }
+		//	operator bool(void){ return h!=INVALID_HANDLE_VALUE; }
+		//	bool operator==(FILE *hh){ return h==hh; }
+		//	bool operator!=(FILE *hh){ return h!=hh; }
+		//};
 
 		if(logofile==NULL){
-			throw "The logofile is not specified. - ƒƒSƒf[ƒ^ƒtƒ@ƒCƒ‹‚ªw’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ";
+			throw "The logofile is not specified. - ãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒæŒ‡å®šã•ã‚Œã¦ã„ã¾ã›ã‚“";
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğŠJ‚­
-		FILE_HANDLE hfile = CreateFile(logofile,GENERIC_READ,0,0,OPEN_EXISTING,
-									   FILE_ATTRIBUTE_NORMAL,NULL);
-		if(hfile==INVALID_HANDLE_VALUE){
-			throw "The logofile is not found. - ƒƒSƒf[ƒ^ƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ";
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+		FILE *hfile = fopen(logofile,"rb");
+		if(hfile==NULL){
+			fclose(hfile);
+			throw "The logofile is not found. - ãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“";
 		}
-		if(GetFileSize(hfile,NULL) < sizeof(LOGO_HEADER)+LOGO_FILE_HEADER_STR_SIZE){
-			throw "The logo file is irregular. -  ƒƒSƒf[ƒ^ƒtƒ@ƒCƒ‹‚ª•s³‚Å‚·";
+		if(GetFileSize(logofile) < sizeof(LOGO_HEADER)+LOGO_FILE_HEADER_STR_SIZE){
+			fclose(hfile);
+			throw "The logo file is irregular. -  ãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒä¸æ­£ã§ã™";
 		}
 
-		// ƒƒSƒf[ƒ^”æ“¾
+		// ãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿æ•°å–å¾—
 		LOGO_FILE_HEADER lfh;
-		DWORD readed = 0;
-		SetFilePointer(hfile,0,0,FILE_BEGIN);
-		ReadFile(hfile,&lfh,sizeof(LOGO_FILE_HEADER),&readed,NULL);
-		if(readed!=sizeof(LOGO_FILE_HEADER)){
-			throw "Failed in reading logofile. - ƒƒSƒf[ƒ^‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½";
+		//DWORD readed = 0;
+		unsigned long readed = 0;
+		fseek(hfile,0,SEEK_SET);
+		//ReadFile(hfile,&lfh,sizeof(LOGO_FILE_HEADddER),&readed,NULL);
+		readed = fread(&lfh,sizeof(LOGO_FILE_HEADER),1,hfile);
+		fprintf(stderr, "  %s\n",lfh.str);
+		if(sizeof(lfh)!=32){
+			fclose(hfile);
+			throw "Failed in reading logofile. - ãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ";
 		}
 		unsigned int num = SWAP_ENDIAN(lfh.logonum.l);
+		fprintf(stderr, "   TotalLOGOnum:%u\n",num);
 
-		// ŠY“–ƒƒS‚ğ’T‚·
+		// è©²å½“ãƒ­ã‚´ã‚’æ¢ã™
 		int i;
 		for(i=num;i;--i){
-			// LOGO_HEADER“Ç‚İ‚İ
+			// LOGO_HEADERèª­ã¿è¾¼ã¿
 			readed = 0;
-			ReadFile(hfile,&lgh,sizeof(LOGO_HEADER),&readed,NULL);
-			if(readed!=sizeof(LOGO_HEADER)){
-				throw "Failed in reading logofile. - ƒƒSƒf[ƒ^‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½";
+			readed = fread(&lgh,sizeof(LOGO_HEADER),1,hfile);
+			fprintf(stderr, "  ====Loade LOGO File ===\n");
+			fprintf(stderr, "    LOGOName:%s\n",lgh.name);
+			fprintf(stderr, "    Position:%d * %d\n",lgh.x,lgh.y);
+			fprintf(stderr, "    LOGOsize:%d * %d\n",lgh.w,lgh.h);
+			if(readed < 1){
+				fclose(hfile);
+				throw "Failed in reading logofile2!. - ãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ";
 			}
 
-			//w’èƒƒS”­Œ©
+			//æŒ‡å®šãƒ­ã‚´ç™ºè¦‹
 			if(logoname==NULL || lstrcmp(logoname,lgh.name)==0){
+				fprintf(stderr, "  Detected:%s\n",lgh.name);
 				break;
 			}
 
-			// Ÿ‚Ö
-			SetFilePointer(hfile,LOGO_PIXELSIZE(&lgh),0,FILE_CURRENT);
+			// æ¬¡ã¸
+			//SetFilePointer(hfile,LOGO_PIXELSIZE(&lgh),0,FILE_CURRENT);
+			fseek(hfile,LOGO_PIXELSIZE(&lgh),SEEK_CUR);
 		}
 		if(i==0){
-			throw "The specified data is not found. - w’è‚³‚ê‚½ƒƒSƒf[ƒ^‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ";
+			fclose(hfile);
+			throw "The specified data is not found. - æŒ‡å®šã•ã‚ŒãŸãƒ­ã‚´ãƒ‡ãƒ¼ã‚¿ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“";
 		}
 
-		// ƒƒ‚ƒŠŠm•Û
+		// ãƒ¡ãƒ¢ãƒªç¢ºä¿
 		LOGO_PIXEL *ptr = new ::LOGO_PIXEL[lgh.h * lgh.w];
 		if(ptr==NULL){
-			throw "Failed in memory allocation. - ƒƒ‚ƒŠŠm•Û‚É¸”s‚µ‚Ü‚µ‚½";
+			fclose(hfile);
+			throw "Failed in memory allocation. - ãƒ¡ãƒ¢ãƒªç¢ºä¿ã«å¤±æ•—ã—ã¾ã—ãŸ";
 		}
 
-		// ƒf[ƒ^“Ç‚İ‚İ
+		// ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 		memset(ptr,0,LOGO_PIXELSIZE(&lgh));
-		ReadFile(hfile,ptr,LOGO_PIXELSIZE(&lgh),&readed,NULL);
+		//ReadFile(hfile,ptr,LOGO_PIXELSIZE(&lgh),&readed,NULL);
+		readed = fread(ptr,LOGO_PIXELSIZE(&lgh),1,hfile);
+		fclose(hfile);
 
 		return ptr;
 	}
 
-	/// ˆÊ’uE[“x’²ß
+	/// ä½ç½®ãƒ»æ·±åº¦èª¿ç¯€
 	void AdjustLogo(aptr<::LOGO_PIXEL> &logodata,int x,int y,int depth)
 	{
 
@@ -215,29 +249,29 @@ protected:
 		if(depth==LOGO_DEFAULT_DEPTH && adjx==0 && adjy==0) return;
 
 		int pitch = lgh.w;
-		// 1/4’PˆÊ’²ß‚Ì‚½‚ßA1‘‚â‚·
+		// 1/4å˜ä½èª¿ç¯€ã®ãŸã‚ã€1å¢—ã‚„ã™
 		int w = ++lgh.w;
 		int h = ++lgh.h;
 
 		aptr<::LOGO_PIXEL> dstdata;
 		dstdata = new ::LOGO_PIXEL[(lgh.h+1) * (lgh.w+1)];
 		if(dstdata==NULL){
-			throw "Failed on memory allocation. - ƒƒ‚ƒŠŠm•Û‚É¸”s‚µ‚Ü‚µ‚½";
+			throw "Failed on memory allocation. - ãƒ¡ãƒ¢ãƒªç¢ºä¿ã«å¤±æ•—ã—ã¾ã—ãŸ";
 		}
 
 		::LOGO_PIXEL *df = logodata.get();
 		::LOGO_PIXEL *ex = dstdata.get();
 		int i,j;
 
-		//----------------------------------------------------- ˆê”Ôã‚Ì—ñ
-		ex[0].dp_y  = df[0].dp_y *(4-adjx)*(4-adjy)*depth/128/16;	// ¶’[
+		//----------------------------------------------------- ä¸€ç•ªä¸Šã®åˆ—
+		ex[0].dp_y  = df[0].dp_y *(4-adjx)*(4-adjy)*depth/128/16;	// å·¦ç«¯
 		ex[0].dp_cb = df[0].dp_cb*(4-adjx)*(4-adjy)*depth/128/16;
 		ex[0].dp_cr = df[0].dp_cr*(4-adjx)*(4-adjy)*depth/128/16;
 		ex[0].y  = df[0].y;
 		ex[0].cb = df[0].cb;
 		ex[0].cr = df[0].cr;
 #pragma parallel
-		for(i=1;i<w-1;i++){									//’†
+		for(i=1;i<w-1;i++){									//ä¸­
 			// Y
 			ex[i].dp_y = (df[i-1].dp_y*adjx*(4-adjy)
 						  + df[i].dp_y*(4-adjx)*(4-adjy)) *depth/128/16;
@@ -260,38 +294,38 @@ protected:
 							+ df[i].cr * Abs(df[i].dp_cr)*(4-adjx)*(4-adjy))
 					/ (Abs(df[i-1].dp_cr)*adjx*(4-adjy)+Abs(df[i].dp_cr)*(4-adjx)*(4-adjy));
 		}
-		ex[i].dp_y  = df[i-1].dp_y * adjx *(4-adjy)*depth/128/16;	// ‰E’[
+		ex[i].dp_y  = df[i-1].dp_y * adjx *(4-adjy)*depth/128/16;	// å³ç«¯
 		ex[i].dp_cb = df[i-1].dp_cb* adjx *(4-adjy)*depth/128/16;
 		ex[i].dp_cr = df[i-1].dp_cr* adjx *(4-adjy)*depth/128/16;
 		ex[i].y  = df[i-1].y;
 		ex[i].cb = df[i-1].cb;
 		ex[i].cr = df[i-1].cr;
 
-		//----------------------------------------------------------- ’†
+		//----------------------------------------------------------- ä¸­
 #pragma parallel
 		for(j=1;j<h-1;j++){
-			// ‹P“xY		//---------------------- ¶’[
+			// è¼åº¦Y		//---------------------- å·¦ç«¯
 			ex[j*w].dp_y = (df[(j-1)*pitch].dp_y*(4-adjx)*adjy
 							+ df[j*pitch].dp_y*(4-adjx)*(4-adjy)) *depth/128/16;
 			if(ex[j*w].dp_y)
 				ex[j*w].y = (df[(j-1)*pitch].y*Abs(df[(j-1)*pitch].dp_y)*(4-adjx)*adjy
 							 + df[j*pitch].y*Abs(df[j*pitch].dp_y)*(4-adjx)*(4-adjy))
 					/ (Abs(df[(j-1)*pitch].dp_y)*(4-adjx)*adjy+Abs(df[j*pitch].dp_y)*(4-adjx)*(4-adjy));
-			// F·(Â)Cb
+			// è‰²å·®(é’)Cb
 			ex[j*w].dp_cb = (df[(j-1)*pitch].dp_cb*(4-adjx)*adjy
 							 + df[j*pitch].dp_cb*(4-adjx)*(4-adjy)) *depth/128/ 16;
 			if(ex[j*w].dp_cb)
 				ex[j*w].cb = (df[(j-1)*pitch].cb*Abs(df[(j-1)*pitch].dp_cb)*(4-adjx)*adjy
 							  + df[j*pitch].cb*Abs(df[j*pitch].dp_cb)*(4-adjx)*(4-adjy))
 					/ (Abs(df[(j-1)*pitch].dp_cb)*(4-adjx)*adjy+Abs(df[j*pitch].dp_cb)*(4-adjx)*(4-adjy));
-			// F·(Ô)Cr
+			// è‰²å·®(èµ¤)Cr
 			ex[j*w].dp_cr = (df[(j-1)*pitch].dp_cr*(4-adjx)*adjy
 							 + df[j*pitch].dp_cr*(4-adjx)*(4-adjy)) *depth/128/ 16;
 			if(ex[j*w].dp_cr)
 				ex[j*w].cr = (df[(j-1)*pitch].cr*Abs(df[(j-1)*pitch].dp_cr)*(4-adjx)*adjy
 							  + df[j*pitch].cr*Abs(df[j*pitch].dp_cr)*(4-adjx)*(4-adjy))
 					/ (Abs(df[(j-1)*pitch].dp_cr)*(4-adjx)*adjy+Abs(df[j*pitch].dp_cr)*(4-adjx)*(4-adjy));
-			for(i=1;i<w-1;i++){	//------------------ ’†
+			for(i=1;i<w-1;i++){	//------------------ ä¸­
 				// Y
 				ex[j*w+i].dp_y = (df[(j-1)*pitch+i-1].dp_y*adjx*adjy
 								  + df[(j-1)*pitch+i].dp_y*(4-adjx)*adjy
@@ -329,7 +363,7 @@ protected:
 						/ (Abs(df[(j-1)*pitch+i-1].dp_cr)*adjx*adjy +Abs(df[(j-1)*pitch+i].dp_cr)*(4-adjx)*adjy
 						   + Abs(df[j*pitch+i-1].dp_cr)*adjx*(4-adjy)+Abs(df[j*pitch+i].dp_cr)*(4-adjx)*(4-adjy));
 			}
-			// Y		//----------------------- ‰E’[
+			// Y		//----------------------- å³ç«¯
 			ex[j*w+i].dp_y = (df[(j-1)*pitch+i-1].dp_y*adjx*adjy
 							  + df[j*pitch+i-1].dp_y*adjx*(4-adjy)) *depth/128/ 16;
 			if(ex[j*w+i].dp_y)
@@ -351,15 +385,15 @@ protected:
 								+ df[j*pitch+i-1].cr*Abs(df[j*pitch+i-1].dp_cr)*adjx*(4-adjy))
 					/ (Abs(df[(j-1)*pitch+i-1].dp_cr)*adjx*adjy+Abs(df[j*pitch+i-1].dp_cr)*adjx*(4-adjy));
 		}
-		//--------------------------------------------------------- ˆê”Ô‰º
-		ex[j*w].dp_y  = df[(j-1)*pitch].dp_y *(4-adjx)*adjy *depth/128/16;	// ¶’[
+		//--------------------------------------------------------- ä¸€ç•ªä¸‹
+		ex[j*w].dp_y  = df[(j-1)*pitch].dp_y *(4-adjx)*adjy *depth/128/16;	// å·¦ç«¯
 		ex[j*w].dp_cb = df[(j-1)*pitch].dp_cb*(4-adjx)*adjy *depth/128/16;
 		ex[j*w].dp_cr = df[(j-1)*pitch].dp_cr*(4-adjx)*adjy *depth/128/16;
 		ex[j*w].y  = df[(j-1)*pitch].y;
 		ex[j*w].cb = df[(j-1)*pitch].cb;
 		ex[j*w].cr = df[(j-1)*pitch].cr;
 #pragma parallel
-		for(i=1;i<w-1;i++){		// ’†
+		for(i=1;i<w-1;i++){		// ä¸­
 			// Y
 			ex[j*w+i].dp_y = (df[(j-1)*pitch+i-1].dp_y * adjx * adjy
 							  + df[(j-1)*pitch+i].dp_y * (4-adjx) *adjy) *depth/128/16;
@@ -382,17 +416,17 @@ protected:
 								+ df[(j-1)*pitch+i].cr*Abs(df[(j-1)*pitch+i].dp_cr)*(4-adjx)*adjy)
 					/ (Abs(df[(j-1)*pitch+i-1].dp_cr)*adjx*adjy +Abs(df[(j-1)*pitch+i].dp_cr)*(4-adjx)*adjy);
 		}
-		ex[j*w+i].dp_y  = df[(j-1)*pitch+i-1].dp_y *adjx*adjy *depth/128/16;	// ‰E’[
+		ex[j*w+i].dp_y  = df[(j-1)*pitch+i-1].dp_y *adjx*adjy *depth/128/16;	// å³ç«¯
 		ex[j*w+i].dp_cb = df[(j-1)*pitch+i-1].dp_cb*adjx*adjy *depth/128/16;
 		ex[j*w+i].dp_cr = df[(j-1)*pitch+i-1].dp_cr*adjx*adjy *depth/128/16;
 		ex[j*w+i].y  = df[(j-1)*pitch+i-1].y;
 		ex[j*w+i].cb = df[(j-1)*pitch+i-1].cb;
 		ex[j*w+i].cr = df[(j-1)*pitch+i-1].cr;
 
-		logodata = dstdata;	// logodataŠJ•ú, dstdata‚ª‘ã“ü‚³‚ê‚Äc‚é
+		logodata = dstdata;	// logodataé–‹æ”¾, dstdataãŒä»£å…¥ã•ã‚Œã¦æ®‹ã‚‹
 	}
 
-	/// F’²®
+	/// è‰²èª¿æ•´
 	void ColorTuning(aptr<::LOGO_PIXEL> &logodata,int y,int u,int v)
 	{
 		::LOGO_PIXEL* lgp = logodata.get();
@@ -406,19 +440,19 @@ protected:
 		}
 	}
 
-	/// ƒtƒF[ƒh‚É‚æ‚é[“xŒvZ
+	/// ãƒ•ã‚§ãƒ¼ãƒ‰ã«ã‚ˆã‚‹æ·±åº¦è¨ˆç®—
 	int CalcFade(int n)
 	{
-		if(n<start || (end<n && end>=start)){	// ”ÍˆÍŠO
+		if(n<start || (end<n && end>=start)){	// ç¯„å›²å¤–
 			return 0;
 		}
-		if(n < start+fadein){			// ƒtƒF[ƒhƒCƒ“
+		if(n < start+fadein){			// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³
 			return ((n - start)*2 +1)*LOGO_FADE_MAX / (fadein *2);
 		}
-		else if(n > end-fadeout && end>=0){		// ƒtƒF[ƒhƒAƒEƒg
+		else if(n > end-fadeout && end>=0){		// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆ
 			return ((end - n)*2 +1)*LOGO_FADE_MAX / (fadeout *2);
 		}
-		// ’Êí
+		// é€šå¸¸
 		return LOGO_FADE_MAX;
 	}
 
