@@ -236,6 +236,7 @@ protected:
 		ex[0].y  = df[0].y;
 		ex[0].cb = df[0].cb;
 		ex[0].cr = df[0].cr;
+#pragma parallel
 		for(i=1;i<w-1;i++){									//’†
 			// Y
 			ex[i].dp_y = (df[i-1].dp_y*adjx*(4-adjy)
@@ -267,6 +268,7 @@ protected:
 		ex[i].cr = df[i-1].cr;
 
 		//----------------------------------------------------------- ’†
+#pragma parallel
 		for(j=1;j<h-1;j++){
 			// ‹P“xY		//---------------------- ¶’[
 			ex[j*w].dp_y = (df[(j-1)*pitch].dp_y*(4-adjx)*adjy
@@ -356,6 +358,7 @@ protected:
 		ex[j*w].y  = df[(j-1)*pitch].y;
 		ex[j*w].cb = df[(j-1)*pitch].cb;
 		ex[j*w].cr = df[(j-1)*pitch].cr;
+#pragma parallel
 		for(i=1;i<w-1;i++){		// ’†
 			// Y
 			ex[j*w+i].dp_y = (df[(j-1)*pitch+i-1].dp_y * adjx * adjy

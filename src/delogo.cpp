@@ -90,14 +90,27 @@ public:
 /*****************************************************************************/
 /** エクスポート関数
  */
-extern "C" __declspec(dllexport) const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
-{
-	typedef deLOGO_Create<Add> AddLOGO;
-	typedef deLOGO_Create<Erase> EraseLOGO;
+const AVS_Linkage *AVS_linkage = NULL; 
+ 
+extern "C" __declspec(dllexport) const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Linkage* const vectors) { 
+	AVS_linkage = vectors; 
+	typedef deLOGO_Create<Add> AddLOGO; 
+	typedef deLOGO_Create<Erase> EraseLOGO; 
+
+	env->AddFunction(EraseLOGO::Name(),EraseLOGO::Params(),EraseLOGO::Create,0);
+	env->AddFunction(AddLOGO::Name(),AddLOGO::Params(),AddLOGO::Create,0);
+	return "DeLOGO plugin"; 
+}
+
+extern "C" __declspec(dllexport) const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env) 
+{ 
+	typedef deLOGO_Create<Add> AddLOGO; 
+	typedef deLOGO_Create<Erase> EraseLOGO; 
 
 	env->AddFunction(EraseLOGO::Name(),EraseLOGO::Params(),EraseLOGO::Create,0);
 	env->AddFunction(AddLOGO::Name(),AddLOGO::Params(),AddLOGO::Create,0);
 
 	return "DeLOGO plugin"; 
 }
+
 

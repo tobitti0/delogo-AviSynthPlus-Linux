@@ -1,5 +1,25 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
 
-#include "winres.h"
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -10,23 +30,27 @@ VS_VERSION_INFO VERSIONINFO
  FILEVERSION 0,0,5,1
  PRODUCTVERSION 0,0,5,1
  FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
  FILEFLAGS 0x0L
- FILEOS VOS__WINDOWS32
- FILETYPE VFT_DLL
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
  FILESUBTYPE 0x0L
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
         BLOCK "041104c0"
         BEGIN
-            VALUE "Comments", "YUY2,YV12 対応\0"
-            VALUE "FileDescription", "透過性ロゴ フィルタ Plugin for AviSynth 2.5\0"
-            VALUE "FileVersion", "0.0.5.1\0"
-            VALUE "InternalName", "deLogo\0"
-            VALUE "LegalCopyright", "(C) MakKi\0"
-            VALUE "OriginalFilename", "delogo.dll\0"
-            VALUE "ProductName", "透過性ロゴ フィルタ\0"
-            VALUE "ProductVersion", "0.05a\0"
+            VALUE "Comments", "YUY2,YV12 対応"
+            VALUE "FileDescription", "透過性ロゴ フィルタ Plugin AMD64 port By yo4kazu"
+            VALUE "FileVersion", "0.0.5.1"
+            VALUE "InternalName", "deLogo"
+            VALUE "LegalCopyright", "(C) MakKi"
+            VALUE "OriginalFilename", "delogo.dll"
+            VALUE "ProductName", "透過性ロゴ フィルタ"
+            VALUE "ProductVersion", "0.05a"
         END
     END
     BLOCK "VarFileInfo"
@@ -34,4 +58,39 @@ BEGIN
         VALUE "Translation", 0x411, 1216
     END
 END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.\0"
+END
+
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 日本語 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
 

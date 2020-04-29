@@ -426,10 +426,10 @@ PVideoFrame __stdcall deLOGO<Erase,YV12p>::GetFrame(int n,IScriptEnvironment *en
 	//Y
 	int dst_pitch = frame->GetPitch(PLANAR_Y);
 	int dst_pitch_r = dst_pitch - logo_w;
-	BYTE *dst = frame->GetWritePtr(PLANAR_Y) + dst_x + dst_y * dst_pitch;
+	BYTE *__restrict dst = frame->GetWritePtr(PLANAR_Y) + dst_x + dst_y * dst_pitch;
 	int logo_pitch = lgh.w;
 	int logo_pitch_r = logo_pitch - logo_w;
-	YV12p::LOGO_PIXEL *lgp = logodata.get() + logo_x + logo_y * lgh.w;
+	YV12p::LOGO_PIXEL *__restrict lgp = logodata.get() + logo_x + logo_y * lgh.w;
 	int i,j;
 	for(i=logo_h;i;--i){
 		for(j=logo_w;j;--j){

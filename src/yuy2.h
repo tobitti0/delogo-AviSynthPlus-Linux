@@ -122,7 +122,7 @@ PVideoFrame __stdcall deLOGO<Erase,YUY2>::GetFrame(int n,IScriptEnvironment *env
 	const int dst_pitch = frame->GetPitch();
 	const int dst_pitch_r = dst_pitch - logo_w*2;
 
-	BYTE *dst = frame->GetWritePtr() + dst_x * 2 + dst_pitch * dst_y;
+	BYTE *__restrict dst = frame->GetWritePtr() + dst_x * 2 + dst_pitch * dst_y;
 	YUY2::LOGO_PIXEL *lgp = logodata.get() + logo_x/2 + logo_pitch * logo_y;
 
 	for(int i=logo_h;i;--i){
