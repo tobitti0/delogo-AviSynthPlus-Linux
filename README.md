@@ -33,7 +33,7 @@ EraseLOGO(logofile="", logoname="",
 |fadein, fadeout  |フェードフレーム数|ロゴをフェードさせます。|
 |interlaced       |インターレースフラグ|YV12をインターレースとして扱います。YUY2では無視されます。|
 ## 利用方法
-AviSynth+3.5.x、FFmpeg、FFMS2を[公式手順][1]に従ってインストールしてください。  
+AviSynth+3.5.x、FFmpegを[公式手順][1]に従ってインストールしてください。  
 本フィルタは次の手順で導入できます。  
 
 [1]:https://github.com/AviSynth/AviSynthPlus/blob/3.5/distrib/docs/english/source/avisynthdoc/contributing/posix.rst
