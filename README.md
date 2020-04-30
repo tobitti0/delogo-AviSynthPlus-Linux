@@ -2,7 +2,7 @@
 ## 概要
 AviSynth+はVer3.5.0からNative Linuxをサポートした。  
 本フィルタは「透過性ロゴ フィルタ for AviSynth 2.5」をLinuxのAviSynth+で使用できるように改造したものである。  
-現状`logo data file ver0.1`のみ対応(多分)。（ver0.2がある？持っていないので未検証)  
+現状`logo data file ver0.1`のみ対応を確認。（他のVersionがある？持っていないので未確認)  
 ## 機能
 BS･CSでよく見かけるような半透明ロゴを付加または除去します。  
 ## 書式
