@@ -1,4 +1,4 @@
-#  透過性ロゴ フィルタ for AviSynth+ 3.5.x & Linux by tobitti0
+#  透過性ロゴ フィルタ for AviSynth+ 3.5.x & Linux
 ## 概要
 AviSynth+はVer3.5.0からNative Linuxをサポートした。  
 本フィルタは「透過性ロゴ フィルタ for AviSynth 2.5」をLinuxのAviSynth+で使用できるように改造したものである。  
