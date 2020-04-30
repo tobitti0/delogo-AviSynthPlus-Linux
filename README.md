@@ -28,9 +28,25 @@ EraseLOGO(logofile="", logoname="",
 |start, end       |開始･終了フレーム|フレーム番号で指定してください。end<startの時はstart以降の全てのフレームで実行されます。|
 |fadein, fadeout  |フェードフレーム数|ロゴをフェードさせます。|
 |interlaced       |インターレースフラグ|YV12をインターレースとして扱います。YUY2では無視されます。|
+## 利用方法
+AviSynth+3.5.x、FFmpeg、FFMS2を[公式手順][1]に従ってインストールしてください。  
+本フィルタは次の手順で導入できます。  
+
+[1]:https://github.com/AviSynth/AviSynthPlus/blob/3.5/distrib/docs/english/source/avisynthdoc/contributing/posix.rst
+[2]:https://github.com/sogaani/JoinLogoScp
+
+````
+git clone https://github.com/tobitti0/delogo-AviSynthPlus.git
+cd delogo-AviSynthPlus/src
+make
+make install
+````
+導入確認は`ls -la /usr/local/lib/avisynth`で表示された内容に、  
+`libdelogo.so`があれば導入できています。
+
 ## 謝辞
 オリジナルの製作者MakKi氏、  
-AviSynth+への対応改修をされたAvisynthを絶讃ιょぅょ Part31 126氏、  
+AviSynth+への対応改修をされた「Avisynthを絶讃ιょぅょ Part31」の126氏、  
 に深く感謝いたします。
 ## 更新履歴
 | 更新日 | Version | 更新内容 | 更新者 |
