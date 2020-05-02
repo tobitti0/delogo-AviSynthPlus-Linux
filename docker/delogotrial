@@ -1,0 +1,35 @@
+#! /bin/bash
+CMDNAME=`basename $0`
+DIR=`dirname $0`
+
+while getopts i:l:o:f: OPT
+do
+  case $OPT in
+    "i" ) FLG_IN="TRUE" ; VALUE_IN="$OPTARG" ;;
+    "l" ) FLG_LOGO="TRUE" ; VALUE_LOGO="$OPTARG" ;;
+    "o" ) FLG_OUT="TRUE" ; VALUE_OUT="$OPTARG" ;;
+    "f" ) VALUE_OPTION="$OPTARG" ;;
+      * ) echo "Usage: $CMDNAME [-i INPUT] [-l LOGO] [-o OUTPUT] [-f ffmpeg_option]" 1>&2
+          exit 1 ;;
+  esac
+done
+
+if [ "$FLG_IN" != "TRUE" -o "$FLG_LOGO" != "TRUE" -o "$FLG_OUT" != "TRUE" ]; then
+  echo "Usage: $CMDNAME [-i InputFileName] [-l LOGOName] [-o OutputFileName] [-f ffmpeg_option]"
+  exit 0
+fi
+
+cd $DIR
+
+echo 'LoadPlugin("/usr/local/lib/libffms2.so")' > $$_input.avs
+echo 'FFIndex("'$DIR'/input/'$VALUE_IN'")' >> $$_input.avs
+echo 'FFMpegSource2("'$DIR'/input/'$VALUE_IN'", atrack=-1)' >> $$_input.avs
+#echo 'total_frame=FrameCount()' >> $$_input.avs
+#echo 'EraseLOGO(logofile="/tmp/delogo/logo/'$VALUE_LOGO'",start=0, end=total_frame, fadein=0, fadeout=0)' >> $$_input.avs
+
+ffmpeg -i $DIR/$$_input.avs $VALUE_OPTION $DIR/output/$VALUE_OUT
+
+rm $$_input.avs
+rm $DIR/input/$VALUE_IN.ffindex
+
+exit 0
