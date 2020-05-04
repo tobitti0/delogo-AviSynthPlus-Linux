@@ -222,6 +222,8 @@ RUN cd /tmp/src &&\
     make CC=gcc-9 CXX=g++-9 LD=gcc-9 &&\
     mv libdelogo.so /usr/local/lib/avisynth
 
-WORKDIR /delogotrial
-ADD docker /delogotrial
-ENTRYPOINT ["./delogotrial"]
+RUN set -xe && \
+    apt-get clean && \
+    rm -r /tmp/*
+
+WORKDIR /tmp/delogotrial
