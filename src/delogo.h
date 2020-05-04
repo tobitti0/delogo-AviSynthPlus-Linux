@@ -155,7 +155,6 @@ protected:
 		// ファイルを開く
 		FILE *hfile = fopen(logofile,"rb");
 		if(hfile==NULL){
-			fclose(hfile);
 			throw "The logofile is not found. - ロゴデータファイルが見つかりません";
 		}
 		if(GetFileSize(logofile) < sizeof(LOGO_HEADER)+LOGO_FILE_HEADER_STR_SIZE){
