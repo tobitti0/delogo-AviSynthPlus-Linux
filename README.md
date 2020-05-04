@@ -48,6 +48,7 @@ make install
 `libdelogo.so`があれば導入できています。
 ## おまけ
 Dockerを用いて、環境を汚さずに利用できるDockerfileをつけています。  
+（適当に作ったのでイメージサイズは2.4GBになります。）  
 環境の構築方法は次のとおりです。  
 ````
 git clone https://github.com/tobitti0/delogo-AviSynthPlus-Linux.git
