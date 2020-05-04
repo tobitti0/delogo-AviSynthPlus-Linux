@@ -27,7 +27,7 @@ echo 'path="'$DIR'/input/'$VALUE_IN'"' >> $$_input.avs
 #echo 'FFMpegSource2(path, atrack=-1, seekmode=-1)' >> $$_input.avs
 echo 'video=LWLibavVideoSource(path, repeat=true, dominance=0)' >> $$_input.avs
 echo 'AudioDub(video,LWLibavAudioSource(path))' >> $$_input.avs
-echo 'EraseLOGO(logofile="/tmp/delogo/logo/'$VALUE_LOGO'",start=0, end=-1, fadein=0, fadeout=0)' >> $$_input.avs
+echo 'EraseLOGO(logofile="'$DIR'/logo/'$VALUE_LOGO'",start=0, end=-1, fadein=0, fadeout=0)' >> $$_input.avs
 
 ffmpeg -i $DIR/$$_input.avs $VALUE_OPTION $DIR/output/$VALUE_OUT
 
