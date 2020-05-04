@@ -22,14 +22,17 @@ fi
 cd $DIR
 
 echo 'LoadPlugin("/usr/local/lib/libffms2.so")' > $$_input.avs
-echo 'FFIndex("'$DIR'/input/'$VALUE_IN'")' >> $$_input.avs
-echo 'FFMpegSource2("'$DIR'/input/'$VALUE_IN'", atrack=-1)' >> $$_input.avs
-#echo 'total_frame=FrameCount()' >> $$_input.avs
-#echo 'EraseLOGO(logofile="/tmp/delogo/logo/'$VALUE_LOGO'",start=0, end=total_frame, fadein=0, fadeout=0)' >> $$_input.avs
+echo 'path="'$DIR'/input/'$VALUE_IN'"' >> $$_input.avs
+#echo 'FFIndex(path)' >> $$_input.avs
+#echo 'FFMpegSource2(path, atrack=-1, seekmode=-1)' >> $$_input.avs
+echo 'video=LWLibavVideoSource(path, repeat=true, dominance=0)' >> $$_input.avs
+echo 'AudioDub(video,LWLibavAudioSource(path))' >> $$_input.avs
+echo 'EraseLOGO(logofile="/tmp/delogo/logo/'$VALUE_LOGO'",start=0, end=-1, fadein=0, fadeout=0)' >> $$_input.avs
 
 ffmpeg -i $DIR/$$_input.avs $VALUE_OPTION $DIR/output/$VALUE_OUT
 
 rm $$_input.avs
-rm $DIR/input/$VALUE_IN.ffindex
+#rm $DIR/input/$VALUE_IN.ffindex
+rm $DIR/input/$VALUE_IN.lwi
 
 exit 0
