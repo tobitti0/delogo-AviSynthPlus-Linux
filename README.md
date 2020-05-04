@@ -37,17 +37,43 @@ AviSynth+3.5.x、FFmpegを[公式手順][1]に従ってインストールして�
 本フィルタは次の手順で導入できます。  
 
 [1]:https://github.com/AviSynth/AviSynthPlus/blob/3.5/distrib/docs/english/source/avisynthdoc/contributing/posix.rst
-[2]:https://github.com/sogaani/JoinLogoScp
 
 ````
-git clone https://github.com/tobitti0/delogo-AviSynthPlus.git
-cd delogo-AviSynthPlus/src
+git clone https://github.com/tobitti0/delogo-AviSynthPlus-Linux.git
+cd delogo-AviSynthPlus-Linux/src
 make
 make install
 ````
 導入確認は`ls -la /usr/local/lib/avisynth`で表示された内容に、  
 `libdelogo.so`があれば導入できています。
-
+## おまけ
+Dockerを用いて、環境を汚さずに利用できるDockerfileをつけています。  
+環境の構築方法は次のとおりです。  
+````
+git clone https://github.com/tobitti0/delogo-AviSynthPlus-Linux.git
+cd delogo-AviSynthPlus-Linux/
+docker build -t delogo_trial .
+````
+初回のみFFmpeg他ライブラリ郡をビルドします。環境によりますが、最低10分程度はかかります。  
+次にロゴファイルを`docker/logo`、動画を`docker/input`に入れます。  
+cloneしたフォルダで次のコマンドを実行すると、delogoをつけてFFmpegを実行します。  
+````
+docker run --rm \
+           -v $(pwd)/docker:/tmp/delogotrial \
+           -it delogo_trial \
+           ./delogotrial \
+                    -i 「inputに入れた動画のファイル名（拡張子含む）」 \
+                    -l 「logoに入れたロゴデータのファイル名（拡張子含む）」 \
+                    -o 「出力される動画のファイル名（拡張子含む）」 \
+                    -f "「（任意）FFmpegにわたすオプション」"
+````
+出力されたファイルは`docker/output`に保存されます。  
+動作自体は、`docker/delogotrial`のシェルスクリプトが動作するだけです。  
+シェルスクリプトはavsファイルを作成し、FFmpegに食わせて、生成されたゴミを消すだけです。  
+l-smash-sourceで読める形式ならば、動作すると思います。  
+TSをそのまま食わせるとドロップがあると失敗する可能性があります。  
+fオプションでコーデックを指定するなど適当な対策を講じてください。  
+(そのままでは音ズレ等で使い物にはならないと思いますが、あくまでロゴを消すことができることの確認用です。）
 ## 謝辞
 オリジナルの製作者MakKi氏、  
 AviSynth+への対応改修をされた「Avisynthを絶讃ιょぅょ Part31」の126氏、  
