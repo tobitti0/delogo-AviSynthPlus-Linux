@@ -220,7 +220,7 @@ RUN set -xe && \
 ADD src /tmp/src
 RUN cd /tmp/src &&\
     make CC=gcc-9 CXX=g++-9 LD=gcc-9 &&\
-    mv libdelogo.so /usr/local/lib/avisynth
+    make install
 
 RUN set -xe && \
     apt-get clean && \
