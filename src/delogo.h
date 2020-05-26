@@ -169,13 +169,13 @@ protected:
 		fseek(hfile,0,SEEK_SET);
 		//ReadFile(hfile,&lfh,sizeof(LOGO_FILE_HEADddER),&readed,NULL);
 		readed = fread(&lfh,sizeof(LOGO_FILE_HEADER),1,hfile);
-		fprintf(stderr, "  %s\n",lfh.str);
+		//fprintf(stderr, "  %s\n",lfh.str);
 		if(sizeof(lfh)!=32){
 			fclose(hfile);
 			throw "Failed in reading logofile. - ロゴデータの読み込みに失敗しました";
 		}
 		unsigned int num = SWAP_ENDIAN(lfh.logonum.l);
-		fprintf(stderr, "   TotalLOGOnum:%u\n",num);
+		//fprintf(stderr, "   TotalLOGOnum:%u\n",num);
 
 		// 該当ロゴを探す
 		int i;
@@ -183,10 +183,10 @@ protected:
 			// LOGO_HEADER読み込み
 			readed = 0;
 			readed = fread(&lgh,sizeof(LOGO_HEADER),1,hfile);
-			fprintf(stderr, "  ====Loade LOGO File ===\n");
-			fprintf(stderr, "    LOGOName:%s\n",lgh.name);
-			fprintf(stderr, "    Position:%d * %d\n",lgh.x,lgh.y);
-			fprintf(stderr, "    LOGOsize:%d * %d\n",lgh.w,lgh.h);
+			//fprintf(stderr, "  ====Loade LOGO File ===\n");
+			//fprintf(stderr, "    LOGOName:%s\n",lgh.name);
+			//fprintf(stderr, "    Position:%d * %d\n",lgh.x,lgh.y);
+			//fprintf(stderr, "    LOGOsize:%d * %d\n",lgh.w,lgh.h);
 			if(readed < 1){
 				fclose(hfile);
 				throw "Failed in reading logofile2!. - ロゴデータの読み込みに失敗しました";
@@ -194,7 +194,7 @@ protected:
 
 			//指定ロゴ発見
 			if(logoname==NULL || lstrcmp(logoname,lgh.name)==0){
-				fprintf(stderr, "  Detected:%s\n",lgh.name);
+				//fprintf(stderr, "  Detected:%s\n",lgh.name);
 				break;
 			}
 
